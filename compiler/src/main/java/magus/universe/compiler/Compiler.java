@@ -1,6 +1,10 @@
 package magus.universe.compiler;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import magus.universe.compiler.exception.CompilerException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -11,27 +15,42 @@ import org.apache.commons.logging.LogFactory;
  */
 public class Compiler {
 	private static final Log LOG = LogFactory.getLog(Compiler.class);
-
-	/**
-	 * The input file
-	 */
-	private File in;
 	
 	/**
-	 * The output file
+	 * All steps of the compilation
 	 */
-	private File out;
+	private List<Step> steps;
 	
 	/**
 	 * Construct a new Compiler
+	 */
+	public Compiler() {
+		// Initialize the steps of the compilation
+		steps = new ArrayList<Step>();
+	}
+	
+	/**
+	 * Perform a compilation
 	 * @param in
-	 * 	The input file
+	 * 	The source file
 	 * @param out
 	 * 	The output file
+	 * @return <code>this</code>
 	 */
-	public Compiler(File in, File out) {
-		this.in = in;
-		this.out = out;
+	public Compiler compile(File in, File out) throws CompilerException {
+		boolean log = LOG.isInfoEnabled();
+		
+		if (log) {
+			LOG.info("Starting compilation");
+			LOG.info("input : " + in.getAbsolutePath());
+			LOG.info("output : " + out.getAbsolutePath());
+		}
+		
+		if (!in.exists()) {
+			throw new CompilerException(in.getAbsolutePath() + "does not exists");
+		}
+		
+		return this;
 	}
 	
 }
